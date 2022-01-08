@@ -1,3 +1,3 @@
 # FTVIM
 
-## As beautiful as vim:GlowInstall
+## As beautiful as vim
