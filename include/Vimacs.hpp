@@ -16,6 +16,7 @@
 /* Defines */
 
 #define CTRL_KEY(k) ((k) & 0x1f)
+#define VIMACS_VERSION "0.0.1"
 
 /* Data structures */
 
@@ -26,6 +27,10 @@ struct t_term {
 	struct termios	r_mode;
 };
 extern struct t_term g_term;
+
+struct t_buffer {
+	std::string buffer;
+};
 
 /* Prototypes */
 

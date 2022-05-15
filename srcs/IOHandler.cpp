@@ -29,21 +29,38 @@ void	keyPressProcess() {
 }
 
 /* Output */
-static void	drawTile() {
-	int	y;
-	for (y = 0; y < g_term.screenrows; y++)
+static void	drawTile(std::string *buffer) {
+	for (int y = 0; y < g_term.screenrows; y++)
 	{
-		write(STDOUT_FILENO, "~", 1);
-		if (y < g_term.screenrows - 1) {
-			write(STDOUT_FILENO, "\r\n", 2);
+		if (y == g_term.screenrows /3) {
+			std::string welcome = "Welcome to vimacs --version " VIMACS_VERSION;
+//			if (wlen > g_term.screencols)
+//				wlen = g_term.screencols;
+			int padding = (g_term.screencols - welcome.length()) / 2;
+			if (padding) {
+				buffer->append("~");
+				padding--;
+			}
+			while (padding--)
+				buffer->append(" ");
+			buffer->append(welcome);
 		}
+		else
+			buffer->append("~");
+		buffer->append("\x1b[K");
+		if (y < g_term.screenrows - 1)
+			buffer->append("\r\n");
 	}
 }
 
 void	refreshScreen() {
+	std::string buffer;
+
+	buffer.append("\x1b[?25l");
+	drawTile(&buffer);
 	// <esc>[H would take back the cursor to the top left
-	write(STDOUT_FILENO, "\x1b[2J", 5);
-	write(STDOUT_FILENO, "\x1b[H", 3);
-	drawTile();
-	write(STDOUT_FILENO, "\x1b[H", 3);
+	buffer.append("\x1b[H");
+	// Hide the cursor
+	buffer.append("\x1b[?25h");
+	write(STDOUT_FILENO, buffer.c_str(), buffer.length());
 }

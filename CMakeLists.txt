@@ -14,6 +14,7 @@ add_executable(vimacs
         include/Vimacs.hpp
         srcs/Terminal.cpp
         srcs/IOHandler.cpp
-        srcs/Utils.cpp)
+        srcs/Utils.cpp
+        srcs/bufferHandler.cpp)
 
 target_link_libraries(vimacs ${CURSES_LIBRARIES} -L/Users/hsabir/.brew/Cellar/libgit2/1.4.3/lib -lgit2)
