@@ -9,13 +9,11 @@ struct t_term g_term;
 int	main()
 {
 	enter_raw_mode();
-	char	c;
+	initTerm();
 
-	while (read(STDIN_FILENO, &c, 1) == 1 && c != 'q') {
-		if (iscntrl(c))
-			printf("%d\r\n", c);
-		else
-			printf("%d ('%c')\r\n", c, c);
+	while (1) {
+		refreshScreen();
+		keyPressProcess();
 	}
 	return 0;
 }

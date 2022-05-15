@@ -11,18 +11,33 @@
 #include <termios.h>
 #include <cctype>
 #include <iostream>
+#include <sys/ioctl.h>
+
+/* Defines */
+
+#define CTRL_KEY(k) ((k) & 0x1f)
 
 /* Data structures */
 
 struct t_term {
-	struct termios o_mode;
-	struct termios r_mode;
+	int				screenrows;
+	int				screencols;
+	struct termios	o_mode;
+	struct termios	r_mode;
 };
 extern struct t_term g_term;
 
 /* Prototypes */
 
 // Terminal
+void	initTerm();
 void	enter_raw_mode(void);
+
+// Utils
+void	die(const char *s);
+
+// IO handlers
+void	keyPressProcess();
+void	refreshScreen();
 
 #endif //VIMACS_VIMACS_HPP

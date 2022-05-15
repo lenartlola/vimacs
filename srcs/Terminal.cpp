@@ -4,14 +4,24 @@
 
 #include "Vimacs.hpp"
 
-static void	die(const char *s) {
-	perror(s);
-	exit(127);
+static int	getWindowSize(int *rows, int *cols) {
+	struct winsize	ws;
+
+	if(ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == -1 || ws.ws_col == 0)
+		return -1;
+	*cols = ws.ws_col;
+	*rows = ws.ws_row;
+	return 0;
+}
+
+void	initTerm() {
+	if (getWindowSize(&g_term.screenrows, &g_term.screencols) == -1)
+		die("vimacs: failed to get the window size\n");
 }
 
 static void	exit_raw_mode(void) {
 	if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &g_term.o_mode) == -1)
-		die("vimacs: failed to reset the terminal attributes to the original.");
+		die("vimacs: failed to reset the terminal attributes to the original.\n");
 }
 
 void	enter_raw_mode(void) {
@@ -36,6 +46,6 @@ void	enter_raw_mode(void) {
 	g_term.r_mode.c_oflag &= ~(OPOST);
 
 	if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &g_term.r_mode) == -1)
-		die("vimacs: failed to set the terminal attributes to the raw mode.");
+		die("vimacs: failed to set the terminal attributes to the raw mode.\n");
 }
 
