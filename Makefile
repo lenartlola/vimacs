@@ -1,55 +1,63 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: hsabir <marvin@42.fr>                      +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2022/01/08 13:18:57 by hsabir            #+#    #+#              #
-#    Updated: 2022/01/08 16:15:08 by hsabir           ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
+CFLAGS := -Wall -Wextra -Werror -g3 -fstack-protector -fsanitize=address
+LIBS := -lcurses $(shell pkg-config --libs libgit2)
+CC = g++
+MAKEFLAGS += --no-print-directory
 
-NAME = ftvim
+UNAME = $(shell uname -s)
 
-LFT_DIR = libs/libft
-LFT_NAME = libft.a
 
-CC = gcc
-CFLAGS = -Wall -Werror -Wextra
 
-# Dynamically link the ncurses lib
-#CFLAGS += -lncurses # To run it in another computer,
-                    # ncurses library should be installed.
-		    # In most of unix system ncurses is installed
-		    # by default. it can be found in /usr/lib or /usr/include
-# Debug mode
-CFLAGS += -g3 -fsanitize=address
+_COLOR := \033[1;33m
+_END := \033[0m
 
-DBG_SRCS = ftvim.dSYM
+SRC_DIR := $(shell mkdir -p ./srcs && printf "./srcs")
+BIN_DIR := $(shell mkdir -p ./bin && printf "./bin")
+INC_DIR := $(shell mkdir -p ./include && printf "./include")
+BUILD_DIR ?= ./build
 
-FILES = ./srcs/main.c
+INC_DIR += $(shell pkg-config --cflags libgit2)
 
-all : $(NAME)
+NAME := vimacs
 
-$(NAME): $(LFT_NAME)
-	$(CC) $(CFLAGS) $(FILES) $(LFT_NAME) -o $(NAME)
+SRCS = $(shell find $(SRC_DIR) -name *.cpp)
+OBJS = $(SRCS:%=$(BUILD_DIR)/%.o)
 
-$(LFT_NAME):
-	$(MAKE) all -sC $(LFT_DIR)/
-	cp $(LFT_DIR)/$(LFT_NAME) $(LFT_NAME)
+$(BUILD_DIR)/%.cpp.o : %.cpp
+	@printf "[$(_COLOR)make$(_END)] compiling $@...\n"
+	@mkdir -p $(dir $@)
+	@$(CC) -c $(CFLAGS) -I$(INC_DIR) $< -o $@
 
-fclean:
-	rm -f $(NAME)
-	rm -f $(LFT_NAME)
-	rm -rf $(DBG_SRCS)
-	$(MAKE) fclean -sC $(LFT_DIR)/
+$(NAME):
+	@printf "[$(_COLOR)make$(_END)] checking update status...\n"
+	@if ! $(MAKE) $(BIN_DIR)/$(NAME) | grep -v "is up to date" ; then \
+		printf "[$(_COLOR)make$(_END)] $@ is up to date ✅\n"; \
+	fi
+
+$(BIN_DIR)/$(NAME):	$(OBJS) $(LIB_FILES)
+	@printf "[$(_COLOR)make$(_END)] linking $@\n"
+	@$(CC) $(CFLAGS) $(OBJS) $(LIBS) -o $(BIN_DIR)/$(NAME)
+
+release: CFLAGS += -02 -march=native
+release: fclean
+release: all
+
+tests: $(OBJS)
+	@printf "[$(_COLOR)make$(_END)] starting tests...\n"
+	@$(MAKE) -e TEST_FLAGS="$(TEST_FLAGS)" -e TEST_OBJ="$(OBJS)" -C $(TESTS_DIR)
+
+all:
+	@$(MAKE) $(NAME)
 
 clean:
-	rm -f $(LFT_NAME)
-	$(MAKE) fclean -sC $(LFT_DIR)/
+	@rm -rf $(BUILD_DIR)
+	@printf "[$(_COLOR)make$(_END)] clean done\n"
 
-re: fclean all
-	$(MAKE) re -sC $(LFT_DIR)
+fclean:
+	@rm -rf $(BUILD_DIR)
+	@rm -rf $(BIN_DIR)/$(NAME)
+	@printf "[$(_COLOR)make$(_END)] fclean done\n"
 
-.PHONY: clean fclean all re
+re: fclean
+re:	all
+
+.PHONY: all fclean clean library re release tests
