@@ -10,6 +10,7 @@ int	main()
 {
 	enter_raw_mode();
 	initTerm();
+	editorOpen();
 
 	while (1) {
 		refreshScreen();

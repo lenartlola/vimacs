@@ -4,6 +4,8 @@
 
 #include "Vimacs.hpp"
 
+//TODO : Provide  a fallback support of getting widows size to all the system
+
 static int	getWindowSize(int *rows, int *cols) {
 	struct winsize	ws;
 
@@ -15,6 +17,9 @@ static int	getWindowSize(int *rows, int *cols) {
 }
 
 void	initTerm() {
+    g_term.cursor_x = 0;
+    g_term.cursor_y = 0;
+    g_term.n_rows = 0;
 	if (getWindowSize(&g_term.screenrows, &g_term.screencols) == -1)
 		die("vimacs: failed to get the window size\n");
 }
@@ -31,7 +36,8 @@ void	enter_raw_mode(void) {
 	tcgetattr(STDIN_FILENO, &g_term.o_mode);
 	atexit(exit_raw_mode);
 
-	g_term.r_mode = g_term.o_mode;
+    //TODO it crush on linux
+	//g_term.r_mode = g_term.o_mode;
 
 	/*
 	 * Remove the echo,
