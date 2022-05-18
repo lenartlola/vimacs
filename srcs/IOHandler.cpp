@@ -93,7 +93,6 @@ static void	drawTile(std::string *buffer) {
 			}
 			else {
 				//TODO add number of line
-//				buffer->append(std::to_string(y));
 				if (y >= g_term.n_line)
 					buffer->append("~");
 			}
@@ -103,6 +102,9 @@ static void	drawTile(std::string *buffer) {
 		if (y < g_term.screenrows - 1)
 			buffer->append("\r\n");
 	}
+	buffer->append("\x1b[H");
+	buffer->append(g_term.buf);
+	buffer->append("\x1b[H");
 }
 
 
@@ -114,8 +116,8 @@ void	refreshScreen() {
 	buffer.append("\x1b[?25l");
 	drawTile(&buffer);
 	// <esc>[H would take back the cursor to the top left
-	buffer.append("\x1b[H");
-	buffer.append(g_term.buf);
+//	buffer.append("\x1b[H");
+
 	// Hide the cursor
 	char buf[32];
 	snprintf(buf, sizeof(buf), "\x1b[%d;%dH", g_term.cursor_y + 1, g_term.cursor_x + 1);
