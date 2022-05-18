@@ -7,15 +7,21 @@
 
 #include <unistd.h>
 #include <ncurses.h>
-#include <git2.h>
+//#include <git2.h>
 #include <termios.h>
 #include <cctype>
 #include <iostream>
 #include <string>
+#include <sstream>
 #include <sys/types.h>
 #include <sys/ioctl.h>
 #include <cstring>
 #include <fstream>
+
+/* Make the program more compatible */
+#define _DEFAULT_SOURCE
+#define _BSD_SOURCE
+#define _GNU_SOURCE
 
 /* Defines */
 
@@ -24,12 +30,6 @@
 
 /* Data structures */
 
-//TODO : Change char * to str
-//typedef struct text_row {
-//    int			size;
-//
-//} text_row;
-
 //TODO - may we don't even need a struct for str
 struct t_term {
 	int				screenrows;
@@ -37,6 +37,7 @@ struct t_term {
     int             cursor_x;
     int             cursor_y;
     int             n_rows;
+	int				n_line;
 	std::string		buf;
 	struct termios	o_mode;
 	struct termios	r_mode;

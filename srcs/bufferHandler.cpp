@@ -16,9 +16,12 @@ void editorOpen(char *filename) {
 	while (std::getline(fp, line, '\n')) {
 //		write(STDOUT_FILENO, line.c_str(), line.length());
 //		write(STDOUT_FILENO, "\n", 1);
+		g_term.buf.append(std::to_string(g_term.n_line));
+		g_term.buf.append(": ");
 		g_term.buf.append(line);
-//		g_term.buf.append("\n");
-//		g_term.buf.append("\n");
+		g_term.buf.append("\r\n");
 		g_term.n_rows = 1;
+		g_term.n_line++;
 	}
+	fp.close();
 }

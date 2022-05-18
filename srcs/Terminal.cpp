@@ -20,6 +20,7 @@ void	initTerm() {
     g_term.cursor_x = 0;
     g_term.cursor_y = 0;
     g_term.n_rows = 0;
+    g_term.n_line = 0;
 	if (getWindowSize(&g_term.screenrows, &g_term.screencols) == -1)
 		die("vimacs: failed to get the window size\n");
 }

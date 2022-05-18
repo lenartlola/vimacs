@@ -91,13 +91,12 @@ static void	drawTile(std::string *buffer) {
 					buffer->append(" ");
 				buffer->append(welcome);
 			}
-			else
-				buffer->append("~");
-		} else {
-			int len = g_term.buf.length();
-			if (len > g_term.screencols)
-				len = g_term.screencols;
-			buffer->append(g_term.buf);
+			else {
+				//TODO add number of line
+//				buffer->append(std::to_string(y));
+				if (y >= g_term.n_line)
+					buffer->append("~");
+			}
 		}
 		// clear lines at a time
 		buffer->append("\x1b[K");
@@ -116,11 +115,13 @@ void	refreshScreen() {
 	drawTile(&buffer);
 	// <esc>[H would take back the cursor to the top left
 	buffer.append("\x1b[H");
+	buffer.append(g_term.buf);
 	// Hide the cursor
-    char buf[32];
-    snprintf(buf, sizeof(buf), "\x1b[%d;%dH", g_term.cursor_y + 1, g_term.cursor_x + 1);
-    buffer.append(buf, strlen(buf));
+	char buf[32];
+	snprintf(buf, sizeof(buf), "\x1b[%d;%dH", g_term.cursor_y + 1, g_term.cursor_x + 1);
+	buffer.append(buf, strlen(buf));
 	buffer.append("\x1b[?25h");
+//	std::cout << buffer.length() << "\n";
 //	write(STDOUT_FILENO, g_term.buf.c_str(), g_term.buf.length());
 	write(STDOUT_FILENO, buffer.c_str(), buffer.length());
 }
