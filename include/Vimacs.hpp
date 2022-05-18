@@ -24,10 +24,10 @@
 /* Data structures */
 
 //TODO : Change char * to str
-typedef struct text_row {
-    int size;
-    char *buf;
-} text_row;
+//typedef struct text_row {
+//    int			size;
+//
+//} text_row;
 
 //TODO - may we don't even need a struct for str
 struct t_term {
@@ -36,7 +36,7 @@ struct t_term {
     int             cursor_x;
     int             cursor_y;
     int             n_rows;
-    text_row        t_row;
+	std::string		buf;
 	struct termios	o_mode;
 	struct termios	r_mode;
 };

@@ -37,7 +37,7 @@ void	enter_raw_mode(void) {
 	atexit(exit_raw_mode);
 
     //TODO it crush on linux
-	//g_term.r_mode = g_term.o_mode;
+	g_term.r_mode = g_term.o_mode;
 
 	/*
 	 * Remove the echo,

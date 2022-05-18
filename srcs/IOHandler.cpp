@@ -58,7 +58,6 @@ void    movexy(int c) {
 
 void	keyPressProcess() {
 	int c = readInput();
-   // std::cout << c << std::endl;
 
 	switch (c) {
 		case CTRL_KEY('q'):
@@ -80,7 +79,7 @@ void	keyPressProcess() {
 static void	drawTile(std::string *buffer) {
 	int y = 0;
 	for (y = 0; y < g_term.screenrows; y++) {
-		if (y > g_term.n_rows) {
+		if (y >= g_term.n_rows) {
 			if (y == g_term.screenrows / 3) {
 				std::string welcome = "Welcome to vimacs --version " VIMACS_VERSION;
 				int padding = (g_term.screencols - welcome.length()) / 2;
@@ -95,10 +94,10 @@ static void	drawTile(std::string *buffer) {
 			else
 				buffer->append("~");
 		} else {
-			int len = g_term.t_row.size;
+			int len = g_term.buf.length();
 			if (len > g_term.screencols)
 				len = g_term.screencols;
-			buffer->append(g_term.t_row.buf);
+			buffer->append(g_term.buf, len);
 		}
 	}
 	// clear lines at a time
