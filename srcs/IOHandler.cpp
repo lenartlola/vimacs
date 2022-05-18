@@ -80,7 +80,7 @@ static void	drawTile(std::string *buffer) {
 	int y = 0;
 	for (y = 0; y < g_term.screenrows; y++) {
 		if (y >= g_term.n_rows) {
-			if (y == g_term.screenrows / 3) {
+			if (y == g_term.screenrows / 3 && g_term.n_rows == 0) {
 				std::string welcome = "Welcome to vimacs --version " VIMACS_VERSION;
 				int padding = (g_term.screencols - welcome.length()) / 2;
 				if (padding) {
@@ -104,7 +104,6 @@ static void	drawTile(std::string *buffer) {
 		if (y < g_term.screenrows - 1)
 			buffer->append("\r\n");
 	}
-
 }
 
 
@@ -122,5 +121,6 @@ void	refreshScreen() {
     snprintf(buf, sizeof(buf), "\x1b[%d;%dH", g_term.cursor_y + 1, g_term.cursor_x + 1);
     buffer.append(buf, strlen(buf));
 	buffer.append("\x1b[?25h");
+//	write(STDOUT_FILENO, g_term.buf.c_str(), g_term.buf.length());
 	write(STDOUT_FILENO, buffer.c_str(), buffer.length());
 }

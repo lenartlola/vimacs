@@ -4,9 +4,21 @@
 
 #include "Vimacs.hpp"
 
-void editorOpen() {
-	// TODO - fix it bordel
-    std::string str;
-	g_term.buf.append("Hello, world!");
-    g_term.n_rows = 1;
+//Stylize to c++
+void editorOpen(char *filename) {
+	std::fstream	fp;
+	std::string		line;
+
+	fp.open(filename);
+	if (!fp.is_open()) {
+		die("Failed to open file");
+	}
+	while (std::getline(fp, line, '\n')) {
+//		write(STDOUT_FILENO, line.c_str(), line.length());
+//		write(STDOUT_FILENO, "\n", 1);
+		g_term.buf.append(line);
+//		g_term.buf.append("\n");
+//		g_term.buf.append("\n");
+		g_term.n_rows = 1;
+	}
 }

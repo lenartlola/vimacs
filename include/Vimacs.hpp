@@ -15,6 +15,7 @@
 #include <sys/types.h>
 #include <sys/ioctl.h>
 #include <cstring>
+#include <fstream>
 
 /* Defines */
 
@@ -67,6 +68,6 @@ void	keyPressProcess();
 void	refreshScreen();
 
 // Buffer handler
-void    editorOpen();
+void    editorOpen(char *filename);
 
 #endif //VIMACS_VIMACS_HPP
