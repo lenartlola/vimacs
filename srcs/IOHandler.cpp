@@ -97,15 +97,16 @@ static void	drawTile(std::string *buffer) {
 			int len = g_term.buf.length();
 			if (len > g_term.screencols)
 				len = g_term.screencols;
-			buffer->append(g_term.buf, len);
+			buffer->append(g_term.buf);
 		}
+		// clear lines at a time
+		buffer->append("\x1b[K");
+		if (y < g_term.screenrows - 1)
+			buffer->append("\r\n");
 	}
-	// clear lines at a time
-	buffer->append("\x1b[K");
-	if (y < g_term.screenrows - 1)
-		buffer->append("\r\n");
 
 }
+
 
 #include <cstring>
 
